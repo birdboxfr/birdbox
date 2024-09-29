@@ -3,13 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting to Stream...</title>
+    <title>Sam</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://cdn.discordapp.com/avatars/712336601287491594/aeeb8013a66b8bb3f35bc954127d69cb.png?size=4096" type="image/png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            background-color: #222;
+        }
+
+        button {
+            position: absolute;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            animation: flash 1s infinite alternate;
+            transition: background-color 0.3s, border-color 0.3s;
+            font-family: Arial, sans-serif; /* Default font */
+        }
+
+        @keyframes flash {
+            0% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: none; /* Hide video initially */
+        }
+    </style>
 </head>
 <body>
+    <!-- Video element -->
+    <video id="video" loop>
+        <source src="your-video-file.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
     <script>
-        window.location.href = 'https://www.youtube.com/watch?v=GLSPq0lqooQ';
-    </script>
+        const buttonCount = 1000; // Total number of buttons
+        const videoSrc = 'your-video-file.mp4'; // Replace with your video file path
+        const video = document.getElementById('video');
 
+        // Array of different font families
+        const fonts = [
+            'Arial, sans-serif',
+            'Verdana, sans-serif',
+            'Courier New, monospace',
+            'Georgia, serif',
+            'Times New Roman, serif',
+            'Impact, sans-serif',
+            'Comic Sans MS, cursive',
+            'Trebuchet MS, sans-serif',
+            'Lucida Console, monospace',
+            'Palatino Linotype, serif',
+            'Tahoma, sans-serif',
+            'Segoe UI, sans-serif',
+            'Consolas, monospace',
+            'Frank Ruhl Libre, serif',
+            'Dancing Script, cursive',
+            'Lobster, cursive',
+            'Permanent Marker, cursive',
+            'Fjalla One, sans-serif',
+            'Noto Sans, sans-serif',
+            'Open Sans, sans-serif',
+            'Roboto, sans-serif',
+            'Montserrat, sans-serif'
+            // Add more fonts as desired
+        ];
+
+        // Function to generate a random color
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Function to create moving and flashing buttons
+        function createMovingButtons() {
+            for (let i = 0; i < buttonCount; i++) {
+                const button = document.createElement('button');
+                button.textContent = 'Click Me';
+
+                // Set random initial position for the button
+                setRandomPosition(button);
+
+                // Change button background and border color periodically
+                setInterval(() => {
+                    button.style.backgroundColor = getRandomColor();
+                    button.style.borderColor = getRandomColor(); // Random border color
+                }, 500); // Change color every 500 ms
+
+                // Set a random font from the array
+                button.style.fontFamily = fonts[Math.floor(Math.random() * fonts.length)];
+
+                // Add click event to play video and hide buttons
+                button.addEventListener('click', () => {
+                    video.style.display = 'block'; // Show video
+                    video.play();                  // Play video with audio
+                    hideButtons();                 // Hide all buttons
+                });
+
+                document.body.appendChild(button);
+                
+                // Constantly move the button
+                setInterval(() => setRandomPosition(button), Math.random() * 300 + 100); // Move every 100-400 ms
+            }
+        }
+
+        // Function to set a random position for buttons
+        function setRandomPosition(button) {
+            const x = Math.random() * (window.innerWidth - 100); // Width - button width
+            const y = Math.random() * (window.innerHeight - 50); // Height - button height
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+        }
+
+        // Function to hide all buttons
+        function hideButtons() {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => button.style.display = 'none');
+        }
+
+        createMovingButtons(); // Call function to create moving buttons
+    </script>
 </body>
 </html>
