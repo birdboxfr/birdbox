@@ -29,14 +29,9 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
-            animation: flash 1s infinite alternate;
-            transition: background-color 0.3s, border-color 0.3s;
+            border: 2px solid transparent; /* Ensure the border exists without fading */
             font-family: Arial, sans-serif; /* Default font */
-        }
-
-        @keyframes flash {
-            0% { opacity: 1; }
-            100% { opacity: 0.5; }
+            background-color: #007bff; /* Default button color */
         }
 
         video {
@@ -59,8 +54,7 @@
     </video>
 
     <script>
-        const buttonCount = 1000; // Total number of buttons
-        const videoSrc = 'your-video-file.mp4'; // Replace with your video file path
+        const buttonCount = 1500; // Total number of buttons
         const video = document.getElementById('video');
 
         // Array of different font families
@@ -100,7 +94,7 @@
             return color;
         }
 
-        // Function to create moving and flashing buttons
+        // Function to create moving and color-changing buttons
         function createMovingButtons() {
             for (let i = 0; i < buttonCount; i++) {
                 const button = document.createElement('button');
