@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sam</title>
+    <title>sam</title>
+
+    <!-- Komika Axis font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Komika+Axis&display=swap">
     
     <!-- Favicon -->
     <link rel="icon" href="https://cdn.discordapp.com/avatars/712336601287491594/aeeb8013a66b8bb3f35bc954127d69cb.png?size=4096" type="image/png">
@@ -29,9 +32,9 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
-            border: 2px solid transparent; /* Ensure the border exists without fading */
-            font-family: Arial, sans-serif; /* Default font */
-            background-color: #007bff; /* Default button color */
+            border: 2px solid transparent;
+            font-family: Arial, sans-serif;
+            background-color: #007bff;
         }
 
         video {
@@ -44,6 +47,28 @@
             object-position: center;
             display: none; /* Hide video initially */
         }
+
+        /* Style for the stolen card details message */
+        .message {
+            font-family: 'Komika Axis', sans-serif;
+            color: black;
+            position: absolute;
+            font-size: 3rem; /* Increased font size */
+            visibility: hidden; /* Hidden initially */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: moveMessage 10s linear infinite; /* Smooth movement */
+            text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white; /* White outline */
+        }
+
+        @keyframes moveMessage {
+            0% { transform: translate(-50%, -50%) translate(0px, 0px); }
+            25% { transform: translate(-50%, -50%) translate(20px, 20px); }
+            50% { transform: translate(-50%, -50%) translate(-20px, -20px); }
+            75% { transform: translate(-50%, -50%) translate(30px, -30px); }
+            100% { transform: translate(-50%, -50%) translate(0px, 0px); }
+        }
     </style>
 </head>
 <body>
@@ -53,9 +78,13 @@
         Your browser does not support the video tag.
     </video>
 
+    <!-- Hidden message element -->
+    <div class="message" id="stolenMessage">You have just been ratted...</div>
+
     <script>
         const buttonCount = 1500; // Total number of buttons
         const video = document.getElementById('video');
+        const stolenMessage = document.getElementById('stolenMessage');
 
         // Array of different font families
         const fonts = [
@@ -81,7 +110,6 @@
             'Open Sans, sans-serif',
             'Roboto, sans-serif',
             'Montserrat, sans-serif'
-            // Add more fonts as desired
         ];
 
         // Function to generate a random color
@@ -112,11 +140,16 @@
                 // Set a random font from the array
                 button.style.fontFamily = fonts[Math.floor(Math.random() * fonts.length)];
 
-                // Add click event to play video and hide buttons
+                // Add click event to play video, hide buttons, and show the stolen message after 5 seconds
                 button.addEventListener('click', () => {
                     video.style.display = 'block'; // Show video
                     video.play();                  // Play video with audio
                     hideButtons();                 // Hide all buttons
+
+                    // Show the message after 5 seconds
+                    setTimeout(() => {
+                        stolenMessage.style.visibility = 'visible';
+                    }, 3500); // Show message after 5 seconds
                 });
 
                 document.body.appendChild(button);
