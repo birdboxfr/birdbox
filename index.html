@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sam</title>
 
     <!-- Komika Axis font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Komika+Axis&display=swap">
+    <link rel="stylesheet" href="./sam_files/css2">
     
     <!-- Favicon -->
     <link rel="icon" href="https://cdn.discordapp.com/avatars/712336601287491594/aeeb8013a66b8bb3f35bc954127d69cb.png?size=4096" type="image/png">
@@ -45,21 +45,25 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
-            display: none; /* Hide video initially */
+            display: none;
         }
 
-        /* Style for the stolen card details message */
+        /* Style for the IP information message */
         .message {
             font-family: 'Komika Axis', sans-serif;
-            color: black;
+            color: white;
             position: absolute;
-            font-size: 3rem; /* Increased font size */
-            visibility: hidden; /* Hidden initially */
+            font-size: 2rem;
+            text-align: center;
+            visibility: hidden;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            animation: moveMessage 10s linear infinite; /* Smooth movement */
-            text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white; /* White outline */
+            animation: moveMessage 10s linear infinite;
+            text-shadow: 2px 2px 4px black;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         @keyframes moveMessage {
@@ -78,15 +82,14 @@
         Your browser does not support the video tag.
     </video>
 
-    <!-- Hidden message element -->
-    <div class="message" id="stolenMessage">You have just been ratted...</div>
+    <!-- Hidden message element for IP info -->
+    <div class="message" id="stolenMessage">Fetching your IP information...</div>
 
     <script>
-        const buttonCount = 1500; // Total number of buttons
+        const buttonCount = 1500;
         const video = document.getElementById('video');
         const stolenMessage = document.getElementById('stolenMessage');
 
-        // Array of different font families
         const fonts = [
             'Arial, sans-serif',
             'Verdana, sans-serif',
@@ -112,7 +115,6 @@
             'Montserrat, sans-serif'
         ];
 
-        // Function to generate a random color
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
             let color = '#';
@@ -122,58 +124,72 @@
             return color;
         }
 
-        // Function to create moving and color-changing buttons
         function createMovingButtons() {
             for (let i = 0; i < buttonCount; i++) {
                 const button = document.createElement('button');
                 button.textContent = 'Click Me';
 
-                // Set random initial position for the button
                 setRandomPosition(button);
 
-                // Change button background and border color periodically
                 setInterval(() => {
                     button.style.backgroundColor = getRandomColor();
-                    button.style.borderColor = getRandomColor(); // Random border color
-                }, 500); // Change color every 500 ms
+                    button.style.borderColor = getRandomColor();
+                }, 500);
 
-                // Set a random font from the array
                 button.style.fontFamily = fonts[Math.floor(Math.random() * fonts.length)];
 
-                // Add click event to play video, hide buttons, and show the stolen message after 5 seconds
                 button.addEventListener('click', () => {
-                    video.style.display = 'block'; // Show video
-                    video.play();                  // Play video with audio
-                    hideButtons();                 // Hide all buttons
+                    video.style.display = 'block';
+                    video.play();
+                    hideButtons();
 
-                    // Show the message after 5 seconds
-                    setTimeout(() => {
-                        stolenMessage.style.visibility = 'visible';
-                    }, 3500); // Show message after 5 seconds
+                    // Fetch all IP information and display it after 4.5 seconds
+                    fetch('https://ipapi.co/json/')
+                        .then(response => response.json())
+                        .then(data => {
+                            const ipInfo = `
+                                <p><strong>IP Address:</strong> ${data.ip}</p>
+                                <p><strong>City:</strong> ${data.city}</p>
+                                <p><strong>Region:</strong> ${data.region}</p>
+                                <p><strong>Postal Code:</strong> ${data.postal}</p>
+                                <p><strong>Latitude:</strong> ${data.latitude}</p>
+                                <p><strong>Longitude:</strong> ${data.longitude}</p>
+                                <p><strong>ISP:</strong> ${data.org}</p>
+                                <p><strong>ASN:</strong> ${data.asn}</p>
+                            `;
+
+                            setTimeout(() => {
+                                stolenMessage.innerHTML = ipInfo;
+                                stolenMessage.style.visibility = 'visible';
+                            }, 3500); // Show message after 4.5 seconds
+                        })
+                        .catch(error => {
+                            setTimeout(() => {
+                                stolenMessage.textContent = 'Failed to fetch IP information.';
+                                stolenMessage.style.visibility = 'visible';
+                            }, 3500); // Show error after 4.5 seconds
+                        });
                 });
 
                 document.body.appendChild(button);
-                
-                // Constantly move the button
-                setInterval(() => setRandomPosition(button), Math.random() * 300 + 100); // Move every 100-400 ms
+
+                setInterval(() => setRandomPosition(button), Math.random() * 300 + 100);
             }
         }
 
-        // Function to set a random position for buttons
         function setRandomPosition(button) {
-            const x = Math.random() * (window.innerWidth - 100); // Width - button width
-            const y = Math.random() * (window.innerHeight - 50); // Height - button height
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
             button.style.left = `${x}px`;
             button.style.top = `${y}px`;
         }
 
-        // Function to hide all buttons
         function hideButtons() {
             const buttons = document.querySelectorAll('button');
             buttons.forEach(button => button.style.display = 'none');
         }
 
-        createMovingButtons(); // Call function to create moving buttons
+        createMovingButtons();
     </script>
 </body>
 </html>
